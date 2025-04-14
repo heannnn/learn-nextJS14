@@ -2,7 +2,7 @@ import styles from "../../styles/home.module.css";
 import Movie from "../../components/movie";
 
 export const metadata = {
-  title: "Home",
+  title: "Home", // 동적인 제목을 갖고있지 않으니까 객체를 바로 export 해도 됨
 };
 
 export const API_URL = "https://nomad-movies.nomadcoders.workers.dev/movies";
