@@ -2,21 +2,25 @@ import { Suspense } from "react";
 import MovieInfo, { getMovie } from "../../../../components/movie-info";
 import MovieVideos from "../../../../components/movie-videos";
 
-interface IParams {
-  params: { id: string };
-}
+// Next.js 15 이후, Params와 SearchParams는 이제 Promise를 사용해야한다.
+type IParams = Promise<{
+  id: string;
+}>;
 
-export async function generateMetadata({ params: { id } }: IParams) {
+export async function generateMetadata(props: { params: IParams }) {
   // API를 또 한번 호출한다고 비효율적이라고 생각할 수 있지만
   // 최신 NextJS 버전에서는 fetch한 데이터를 caching한다.
   // generateMetadata 할 때 getMovie API호출 후 MovieInfo 컴포넌트에서 getMovie시에는 캐싱해논 데이터를 사용.
-  const movie = await getMovie(id);
+  const params = await props.params;
+  const movie = await getMovie(params.id);
   return {
     title: movie.title,
   };
 }
 
-export default async function MovieDetailPage({ params: { id } }: IParams) {
+export default async function MovieDetailPage(props: { params: IParams }) {
+  const params = await props.params;
+  const id = params.id;
   return (
     <div>
       {/* Suspense는 await와 분리되어있음 */}
